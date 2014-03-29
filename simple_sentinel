@@ -1,0 +1,102 @@
+#!/usr/bin/env node
+
+require('shelljs/global');
+var program = require('commander');
+
+function start() {
+ console.log("Starting redis:16379");
+ exec('rm -f ' + __dirname + '/redis/redis.log');
+ if(!which('redis-server')) {
+   echo('Please install redis 2.8.x');
+   exit(1);
+ }
+
+ if (exec('redis-server ' + __dirname +  '/conf/redis-2.8.conf --loglevel verbose').code !== 0) {
+   if(test('-f',__dirname + './redis/redis.log')) {
+     echo('Failed to start redis. Here\'s the log:');
+     cat('./redis/redis.log');
+     exit(1);
+   }
+   echo('Failed to start redis, bailing...');
+   exit(1);
+ }
+
+ exec('sleep 1');
+
+ if(exec('redis-cli -p 16379 ping', {silent: true}).code !== 0) {
+   if(test('-f',__dirname + './redis/redis.log')) {
+     echo('Redis failed ping, Here\'s the log:');
+     cat(__dirname + './redis/redis.log');
+     exit(1);
+   }
+   echo('Redis failed ping, bailing...');
+   exit(1);
+ }
+ echo('success');
+
+ console.log("Starting sentinel:26379");
+ if(exec('redis-server ./conf/sentinel.conf --sentinel --loglevel verbose').code !== 0) {
+   if(test('-f',__dirname + './sentinel/sentinel.log')) {
+     echo('Failed to start sentinel. Here\'s the log:');
+     cat(__dirname + './sentinel/sentinel.log');
+     exit(1);
+   }
+   echo('Failed to start sentinel, bailing...');
+   exit(1);
+ }
+
+ exec('sleep 1');
+
+ if(exec('redis-cli -p 16379 ping', {silent: true}).code !== 0) {
+   if(test('-f',__dirname + './sentinel/sentinel.log')) {
+     echo('Sentinel failed ping. Here\'s the log:');
+     cat('./sentinel/sentinel.log');
+     exit(1);
+   }
+   echo('Sentinel failed ping, bailing...');
+   exit(1);
+ }
+ echo('success');
+}
+
+function redis_alive(verbose){
+  return (exec('redis-cli -p 16379 ping', { silent: !verbose }).code === 0);
+}
+
+function sentinel_alive(verbose){
+  return (exec('redis-cli -p 26379 ping', { silent: !verbose }).code === 0);
+}
+
+function stop() {
+  var sentinel_pid_file = __dirname + '/sentinel/sentinel.pid';
+
+  echo('Shutting down redis');
+  if(redis_alive()) {
+    exec('redis-cli -p 16379 shutdown');
+  } else {
+    echo('already down');
+  }
+  echo('Shutting down sentinel');
+  if(sentinel_alive()) {
+    if(test('-f', sentinel_pid_file)) {
+      exec('kill -TERM `cat ' + sentinel_pid_file + '`');
+    } else {
+      echo('Can\'t find the PID file!');
+      exit(1);
+    }
+  } else {
+    echo('already down');
+  }
+  exit(0);
+}
+
+program.usage('[start|stop]');
+program.command('start')
+       .description('start redis and sentinel')
+       .action(start);
+
+program.command('stop')
+       .description('stop redis and sentinel')
+       .action(stop);
+
+program.parse(process.argv);
