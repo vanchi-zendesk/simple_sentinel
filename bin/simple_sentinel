@@ -1,0 +1,18 @@
+#!/usr/bin/env node
+
+var program = require('commander');
+var start   = require('../index.js').start;
+var stop    = require('../index.js').stop;
+
+
+
+program.usage('[start|stop]');
+program.command('start')
+       .description('start redis and sentinel')
+       .action(start);
+
+program.command('stop')
+       .description('stop redis and sentinel')
+       .action(stop);
+
+program.parse(process.argv);

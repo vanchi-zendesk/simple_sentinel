@@ -4,13 +4,16 @@
   "description": "A simple utility to setup redis and sentinel for testing very quickly",
   "author": "Vanchi K A <vancheswaran@gmail.com>",
   "license": "MIT",
-  "main": "simple_sentinel",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./node_modules/.bin/mocha --ui exports --reporter spec test/simple_sentinel_test.js"
   },
   "dependencies": {
     "commander": "*",
     "shelljs": "*"
+  },
+  "devDependencies": {
+    "mocha": "*"
   },
   "repository": {
     "type": "git",
