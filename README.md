@@ -15,7 +15,8 @@ For sentinel: Created by reading this page: http://redis.io/topics/sentinel
 
 Requirements
 ============
-- node 
+- redis (tested @2.8.4)
+- node
 - Include this package in your project, run npm install.
 
 Usage
@@ -33,6 +34,16 @@ Usage
   Options:
 
     -h, --help  output usage information
+```
+
+In code
+=======
+You can also use simple_sentinel from code.
+
+```
+var simple_sentinel = require('simple_sentinel');
+simple_sentinel.start(/*silent*/);
+simple_sentinel.stop(/*silent*/);
 ```
 
 Notes about stop
