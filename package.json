@@ -1,6 +1,6 @@
 {
   "name": "simple_sentinel",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "A simple utility to setup redis and sentinel for testing very quickly",
   "author": "Vanchi K A <vancheswaran@gmail.com>",
   "license": "MIT",
