@@ -16,12 +16,14 @@ For sentinel: Created by reading this page: http://redis.io/topics/sentinel
 
 Requirements
 ============
+
 - redis (tested @2.8.4)
 - node
 - Include this package in your project, run npm install.
 
 Usage
 =====
+
 ```
 -$ node_modules/simple_sentinel/bin/simple_sentinel --help
 
@@ -39,12 +41,13 @@ Usage
 
 In code
 =======
+
 You can also use simple_sentinel from code.
 
 ```
 var simple_sentinel = require('simple_sentinel');
-simple_sentinel.start(/*silent*/);
-simple_sentinel.stop(/*silent*/);
+return_code = simple_sentinel.start(silent=true);
+return_code = simple_sentinel.stop(silent=true);
 ```
 
 Notes about stop

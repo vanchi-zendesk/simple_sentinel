@@ -34,68 +34,69 @@ module.exports = {
     rm('-f', redis_log_file);
     rm('-f', sentinel_log_file);
 
-    if(!silent) echo('Starting redis:16379');
+    if(!silent) console.log('Starting redis:16379');
     if(!which('redis-server')) {
-      echo('Please install redis >2.8.4');
-      exit(1);
+      console.log('Please install redis >2.8.4');
+      return(1);
     }
 
     if (exec(redis_start).code !== 0) {
       if(test('-f', redis_log_file)) {
-        echo('Failed to start redis. Here\'s the log:');
+        console.log('Failed to start redis. Here\'s the log:');
         cat(redis_log_file);
-        exit(1);
+        return(1);
       }
-      echo('Failed to start redis, bailing...');
-      exit(1);
+      console.log('Failed to start redis, bailing...');
+      return(1);
     }
 
     exec('sleep 1');
 
     if(!redis_alive()) {
       if(test('-f', redis_log_file)) {
-        echo('Redis failed ping, Here\'s the log:');
+        console.log('Redis failed ping, Here\'s the log:');
         cat(redis_log_file);
-        exit(1);
+        return(1);
       }
-      echo('Redis failed ping, bailing...');
-      exit(1);
+      console.log('Redis failed ping, bailing...');
+      return(1);
     }
-    if(!silent) echo('success');
+    if(!silent) console.log('success');
 
-    if(!silent) echo('Starting sentinel:26379');
+    if(!silent) console.log('Starting sentinel:26379');
     if(exec(sentinel_start).code !== 0) {
       if(test('-f', sentinel_log_file)) {
-        echo('Failed to start sentinel. Here\'s the log:');
+        console.log('Failed to start sentinel. Here\'s the log:');
         cat(sentinel_log_file);
-        exit(1);
+        return(1);
       }
-      echo('Failed to start sentinel, bailing...');
-      exit(1);
+      console.log('Failed to start sentinel, bailing...');
+      return(1);
     }
 
     exec('sleep 1');
 
     if(!sentinel_alive()) {
       if(test('-f', sentinel_log_file)) {
-        echo('Sentinel failed ping. Here\'s the log:');
+        console.log('Sentinel failed ping. Here\'s the log:');
         cat(sentinel_log_file);
-        exit(1);
+        return(1);
       }
-      echo('Sentinel failed ping, bailing...');
-      exit(1);
+      console.log('Sentinel failed ping, bailing...');
+      return(1);
     }
-    if (!silent) echo('success');
+    if (!silent) console.log('success');
+    return(0);
   },
 
   stop: function(silent) {
-    if(!silent) echo('Shutting down redis');
+    if(!silent) console.log('Shutting down redis');
     if(redis_alive()) {
       exec('redis-cli -p 16379 shutdown');
     } else {
-      if(!silent) echo('already down');
+      if(!silent) console.log('already down');
     }
-    if(!silent) echo('Shutting down sentinel');
+    if(!silent) console.log('Shutting down sentinel');
     if(sentinel_alive()) {
       var pid;
 
@@ -109,9 +110,10 @@ module.exports = {
         exec('kill -TERM ' + pid);
       }
     } else {
-      if(!silent) echo('already down');
+      if(!silent) console.log('already down');
     }
     rm('-f', redis_log_file);
     rm('-f', sentinel_log_file);
+    return(0);
   }
 };

@@ -9,10 +9,18 @@ var stop    = require('../index.js').stop;
 program.usage('[start|stop]');
 program.command('start')
        .description('start redis and sentinel')
-       .action(start);
+       .action(function() {
+           if(start()) {
+             process.exit(1);
+           }
+         });
 
 program.command('stop')
        .description('stop redis and sentinel')
-       .action(stop);
+       .action(function() {
+           if(stop()) {
+             process.exit(1);
+           }
+         });
 
 program.parse(process.argv);
