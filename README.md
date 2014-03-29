@@ -51,4 +51,4 @@ Notes about stop
 
 Stops redis:16379 by sending 'redis-cli -p 16379 shutdown', so watch out if you have redis running on that port.
 
-For the sentinel, since the 'shutdown' command is not working on redis v2.8.4, we try to 'kill -TERM `cat sentinel.pid`'. If the pid file is not found, stop exits with return code 1.
+For the sentinel, since the 'shutdown' command is not working on redis v2.8.4, we try to 'kill -TERM `cat sentinel.pid`'. If the pid file is not found, we further query by doing 'redis-cli -p 26379 | grep process_id', parse the pid and kill it.
