@@ -21,7 +21,7 @@ Requirements
 Usage
 =====
 ```
--$ node_modules/simple_sentinel/simple_sentinel --help
+-$ node_modules/simple_sentinel/bin/simple_sentinel --help
 
   Usage: simple_sentinel [start|stop]
 
