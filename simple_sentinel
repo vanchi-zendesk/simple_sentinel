@@ -91,7 +91,6 @@ function start() {
 }
 
 function stop() {
-
   echo('Shutting down redis');
   if(redis_alive()) {
     exec('redis-cli -p 16379 shutdown');
@@ -100,17 +99,22 @@ function stop() {
   }
   echo('Shutting down sentinel');
   if(sentinel_alive()) {
+    var pid;
+
     if(test('-f', sentinel_pid_file)) {
-      exec('kill -TERM `cat ' + sentinel_pid_file + '`');
+      pid = exec('cat '+sentinel_pid_file, {silent:true}).output;
     } else {
-      echo('Can\'t find the PID file!');
-      exit(1);
+      pid = exec('redis-cli -p 26379 info | grep process_id | cut -d: -f2', {silent:true}).output;
+    }
+    if(pid) {
+      pid = parseInt(pid);
+      exec('kill -TERM ' + pid);
     }
   } else {
     echo('already down');
   }
- rm('-f', redis_log_file);
- rm('-f', sentinel_log_file);
+  rm('-f', redis_log_file);
+  rm('-f', sentinel_log_file);
   exit(0);
 }
 
