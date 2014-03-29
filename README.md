@@ -4,20 +4,24 @@ simple_sentinel
 A simple nodejs utility to start and stop a test sentinel and redis.
 Starts redis at port 16379 and sentinel at port 26379.
 
-This is mainly intended as a test helper. If you have a project which needs to run tests against redis and sentinel, you could use simple_sentinel to start and stop your redis/sentinel setup.
+This is mainly intended as a test helper. If you have several projects which needs to run tests against redis and sentinel, you could include simple_sentinel as a package, and use it to start and stop your redis/sentinel setup.
 
 
 Configuration
 =============
 
-Configuration for redis: Slightly modified from https://raw.github.com/antirez/redis/2.8/redis.conf
-Configuration for sentinel was created by reading this page: http://redis.io/topics/sentinel
+For redis: Slightly modified from https://raw.github.com/antirez/redis/2.8/redis.conf
+For sentinel: Created by reading this page: http://redis.io/topics/sentinel
 
+Requirements
+============
+- node 
+- Include this package in your project, run npm install.
 
 Usage
 =====
 ```
--$ simple_sentinel --help
+-$ node_modules/simple_sentinel/simple_sentinel --help
 
   Usage: simple_sentinel [start|stop]
 
