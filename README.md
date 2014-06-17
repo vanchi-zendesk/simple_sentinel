@@ -32,7 +32,7 @@ For sentinel: Created by reading this page: http://redis.io/topics/sentinel
 ```
 with additional configs:
 ```
-  sentinel monitor <master_name> <host> <port> 1'
+  sentinel monitor <master_name> <host> <port> 1
   sentinel down-after-milliseconds <master_name> 2000
   sentinel failover-timeout <master_name> 90000
   sentinel parallel-syncs <master_name> 2
