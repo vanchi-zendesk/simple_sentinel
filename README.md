@@ -11,8 +11,32 @@ This is mainly intended as a test helper. If you have several projects which nee
 Configuration
 =============
 
-For redis: Slightly modified from https://raw.github.com/antirez/redis/2.8/redis.conf
+For redis: we start redis with the following config
+```
+  redis-server
+          --daemonize yes
+          --logfile <file>
+          --dir <dir>
+          --loglevel verbose
+          --port <port>
+```
 For sentinel: Created by reading this page: http://redis.io/topics/sentinel
+```
+  redis-server
+          --sentinel
+          --daemonize yes
+          --logfile <file>
+          --pidfile <file>
+          --loglevel verbose
+          --port <port>
+```
+with additional configs:
+```
+  sentinel monitor <master_name> <host> <port> 1
+  sentinel down-after-milliseconds <master_name> 2000
+  sentinel failover-timeout <master_name> 90000
+  sentinel parallel-syncs <master_name> 2
+```
 
 Requirements
 ============
@@ -37,6 +61,21 @@ Usage
   Options:
 
     -h, --help  output usage information
+    -f, --config specify a config file
+```
+
+Config file
+===========
+We can specify different ports for redis and sentinels. The first redis port is treated as the master.
+```
+module.exports = {
+  redis : {
+    ports: [ 16379, 16380, 16381 ]
+  },
+  sentinel: {
+    ports: [ 26379, 26380, 26381 ]
+  }
+};
 ```
 
 In code
@@ -46,8 +85,8 @@ You can also use simple_sentinel from code.
 
 ```
 var simple_sentinel = require('simple_sentinel');
-return_code = simple_sentinel.start(silent=true);
-return_code = simple_sentinel.stop(silent=true);
+return_code = simple_sentinel.start(config);
+return_code = simple_sentinel.stop(config);
 ```
 
 Notes about stop

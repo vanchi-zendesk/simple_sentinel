@@ -3,24 +3,38 @@
 var program = require('commander');
 var start   = require('../index.js').start;
 var stop    = require('../index.js').stop;
+var command = null;
+var config_file = function() {
+  if(program.config) {
+    return require(require('path').resolve(program.config));
+  }
+};
 
 
 
 program.usage('[start|stop]');
+
+program.option('-f --config <path>', 'path to a configuration');
+
 program.command('start')
        .description('start redis and sentinel')
        .action(function() {
-           if(start()) {
-             process.exit(1);
-           }
-         });
+         command = 'start';
+         if(start(config_file())) {
+           process.exit(1);
+         }
+       });
 
 program.command('stop')
        .description('stop redis and sentinel')
        .action(function() {
-           if(stop()) {
-             process.exit(1);
-           }
-         });
+         command = 'stop';
+         if(stop(config_file())) {
+           process.exit(1);
+         }
+       });
 
 program.parse(process.argv);
+if(!command) {
+  program.help();
+}
