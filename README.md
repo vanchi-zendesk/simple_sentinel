@@ -85,8 +85,8 @@ You can also use simple_sentinel from code.
 
 ```
 var simple_sentinel = require('simple_sentinel');
-return_code = simple_sentinel.start(silent=true);
-return_code = simple_sentinel.stop(silent=true);
+return_code = simple_sentinel.start(config);
+return_code = simple_sentinel.stop(config);
 ```
 
 Notes about stop
