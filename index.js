@@ -70,10 +70,14 @@ function stop_redis(port) {
 }
 
 function build_sentinel_config(name, host, port) {
-  return [ 'sentinel monitor '+name+ ' '+host+' '+port+' 1',
-           'sentinel down-after-milliseconds '+name+' 2000',
-           'sentinel failover-timeout '+name+' 90000',
-           'sentinel parallel-syncs '+name+' 2'].join('\n');
+  if(name && host && port) {
+    return [ 'sentinel monitor '+name+ ' '+host+' '+port+' 1',
+             'sentinel down-after-milliseconds '+name+' 2000',
+             'sentinel failover-timeout '+name+' 90000',
+             'sentinel parallel-syncs '+name+' 2'].join('\n');
+  } else {
+    return "";
+  }
 }
 
 function start_sentinel(port, master_host, master_port) {
@@ -82,13 +86,13 @@ function start_sentinel(port, master_host, master_port) {
   var sentinel_conf_path = __dirname + '/sentinel/' + port + '/sentinel.conf';
   var sentinel_log_file  = sentinel_dir + '/sentinel.log';
   var sentinel_pid_file  = sentinel_dir + '/sentinel.pid';
-  var sentinel_start = 'redis-server ' + sentinel_conf_path +
-                       ' --sentinel ' +
-                       ' --daemonize yes' +
-                       ' --logfile ' + sentinel_log_file +
-                       ' --pidfile ' + sentinel_pid_file +
-                       ' --port ' + port +
-                       ' --loglevel verbose';
+  var sentinel_start     = 'redis-server ' + sentinel_conf_path +
+                           ' --sentinel ' +
+                           ' --daemonize yes' +
+                           ' --logfile ' + sentinel_log_file +
+                           ' --pidfile ' + sentinel_pid_file +
+                           ' --port ' + port +
+                           ' --loglevel verbose';
   mkdir('-p', sentinel_dir);
   rm('-f', sentinel_log_file);
 
@@ -171,7 +175,7 @@ module.exports = {
     }
     if(config.sentinel && config.sentinel.ports) {
       for(i = 0; i < config.sentinel.ports.length; i++) {
-        start_sentinel(config.sentinel.ports[i], 'localhost', config.redis.ports[0]);
+        start_sentinel(config.sentinel.ports[i], 'localhost', (config.redis && config.redis.ports && config.redis.ports[0]));
       }
     }
     return(0);

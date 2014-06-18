@@ -55,5 +55,18 @@ describe('simple_sentinel', function() {
       assert.ok(0 !== exec('redis-cli -p 16379 ping', {silent: true}).code);
     });
   });
+  describe('with no redis ports', function() {
+    var config = { sentinel: { ports: [ 26379 ] } };
+    it('should start sentinel', function() {
+      assert.equal(0, SimpleSentinel.start(config));
+      assert.equal(0, exec('redis-cli -p 26379 ping', {silent: true}).code);
+      assert.ok(0 !== exec('redis-cli -p 16379 ping', {silent: true}).code);
+    });
+
+    it('should stop sentinel', function() {
+      assert.equal(0, SimpleSentinel.stop(config));
+      assert.ok(0 !== exec('redis-cli -p 26379 ping', {silent: true}).code);
+    });
+  });
 
 });
