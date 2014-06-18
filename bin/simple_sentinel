@@ -11,14 +11,16 @@ var parse_ports = function(str) {
   });
 };
 var config = function() {
-  var conf = {};
+  var conf;
   if(program.config) {
     return require(require('path').resolve(program.config));
   }
   if(program.sentinel) {
+    conf = conf || {};
     conf.sentinel = { ports: parse_ports(program.sentinel) };
   }
   if(program.redis) {
+    conf = conf || {};
     conf.redis = { ports: parse_ports(program.redis) };
   }
   return conf;
