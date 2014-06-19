@@ -4,10 +4,26 @@ var program = require('commander');
 var start   = require('../index.js').start;
 var stop    = require('../index.js').stop;
 var command = null;
-var config_file = function() {
+var parse_ports = function(str) {
+  var ports = str.split(',');
+  return ports.map(function(n) {
+    return Number(n);
+  });
+};
+var config = function() {
+  var conf;
   if(program.config) {
     return require(require('path').resolve(program.config));
   }
+  if(program.sentinel) {
+    conf = conf || {};
+    conf.sentinel = { ports: parse_ports(program.sentinel) };
+  }
+  if(program.redis) {
+    conf = conf || {};
+    conf.redis = { ports: parse_ports(program.redis) };
+  }
+  return conf;
 };
 
 
@@ -15,24 +31,26 @@ var config_file = function() {
 program.usage('[start|stop]');
 
 program.option('-f --config <path>', 'path to a configuration');
+program.option('-s --sentinel <port1,port2>', 'path to a configuration');
+program.option('-r --redis <port1,port2>', 'path to a configuration');
 
 program.command('start')
-       .description('start redis and sentinel')
-       .action(function() {
-         command = 'start';
-         if(start(config_file())) {
-           process.exit(1);
-         }
-       });
+.description('start redis and sentinel')
+.action(function() {
+  command = 'start';
+  if(start(config())) {
+    process.exit(1);
+  }
+});
 
 program.command('stop')
-       .description('stop redis and sentinel')
-       .action(function() {
-         command = 'stop';
-         if(stop(config_file())) {
-           process.exit(1);
-         }
-       });
+.description('stop redis and sentinel')
+.action(function() {
+  command = 'stop';
+  if(stop(config())) {
+    process.exit(1);
+  }
+});
 
 program.parse(process.argv);
 if(!command) {
