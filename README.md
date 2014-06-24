@@ -62,6 +62,8 @@ Usage
 
     -h, --help  output usage information
     -f, --config specify a config file
+    -r, --redis <ports separated by comma>
+    -s, --sentinel <ports separated by comma>
 ```
 
 Config file
