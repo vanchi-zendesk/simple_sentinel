@@ -97,3 +97,14 @@ Notes about stop
 Stops redis:16379 by sending 'redis-cli -p 16379 shutdown', so watch out if you have redis running on that port.
 
 For the sentinel, since the 'shutdown' command is not working on redis v2.8.4, we try to 'kill -TERM `cat sentinel.pid`'. If the pid file is not found, we further query by doing 'redis-cli -p 26379 | grep process_id', parse the pid and kill it.
+
+
+## Copyright and license
+
+Copyright 2014-2015 Zendesk
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+
+You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
