@@ -3,7 +3,7 @@
   "version": "0.1.7",
   "description": "A simple utility to setup redis and sentinel for testing very quickly",
   "author": "Vanchi K A <vancheswaran@gmail.com>",
-  "license": "MIT",
+  "license": "Apache V2",
   "main": "index.js",
   "scripts": {
     "test": "./node_modules/.bin/mocha --ui exports --reporter spec test/simple_sentinel_test.js"
