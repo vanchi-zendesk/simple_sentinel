@@ -10,14 +10,14 @@
   },
   "bin": "./bin/simple_sentinel",
   "dependencies": {
-    "commander": "*",
-    "shelljs": "*"
+    "commander": "9.0.0",
+    "shelljs": "0.8.5"
   },
   "devDependencies": {
-    "mocha": "*"
+    "mocha": "9.2.1"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/vanchi-zendesk/simple_sentinel.git"
+    "url": "https://github.com/zendesk/simple_sentinel.git"
   }
 }
